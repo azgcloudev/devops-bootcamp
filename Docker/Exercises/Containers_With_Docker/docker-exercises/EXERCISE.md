@@ -51,3 +51,31 @@ docker pull phpmyadmin:5.2-apache
 ```bash
 docker run --name phpmyadmin -p 8181:80 -d --link mysql-db:db phpmyadmin:5.2-apache
 ```
+
+### Use docker compose for MySQL and Phpmyadmin
+
+Deploy's MySQL database and Phpmyadmin from a docker compose file.
+```yaml
+version: '3'
+services:
+  mysql:
+    image: mysql
+    ports:
+      - 3306:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=Administrator123=Administrator123
+      - MYSQL_DATABASE=Test
+      - MYSQL_USER=admin
+      - MYSQL_PASSWORD=Administrator123
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin:5.2-apache
+    ports:
+     - 8181:80
+    environment:
+      - PMA_ARBITRARY=1
+volumes:
+  mysql-data:
+```
