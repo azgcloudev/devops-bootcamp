@@ -52,9 +52,12 @@ docker pull phpmyadmin:5.2-apache
 docker run --name phpmyadmin -p 8181:80 -d --link mysql-db:db phpmyadmin:5.2-apache
 ```
 
+## Exercise 3
+
 ### Use docker compose for MySQL and Phpmyadmin
 
 Deploy's MySQL database and Phpmyadmin from a docker compose file.
+
 ```yaml
 version: '3'
 services:
@@ -79,3 +82,7 @@ services:
 volumes:
   mysql-data:
 ```
+
+## Exercise 4
+
+### Dockerize java application
