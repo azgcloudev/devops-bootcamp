@@ -24,7 +24,7 @@ Ran the following in the local terminal:
 
 ```bash
 export DB_NAME=Test
-export DB_Server=localhost
+export DB_SERVER=localhost
 export DB_PWD=Administrator123
 export DB_USER=admin
 ```
@@ -83,9 +83,6 @@ volumes:
   mysql-data:
 ```
 
-## Exercise 5
-
-
 ## Exercise 4
 
 ### Dockerize the java application
@@ -103,3 +100,15 @@ EXPOSE 8080
 
 CMD [ "java", "-jar", "docker-exercises-project-1.0-SNAPSHOT.jar" ]
 ```
+
+## Exercise 5 (Build and push Java Application Docker Image)
+
+### Create the hosted repository in nexus
+From the nexus GUI created a docker hosted repository.
+Enabled the following:
+- Allow anonymous docker pull.
+- Enabled HTTP port 8083.
+- On realms tab:
+  - Activated *Docker Bearer Token Realm*
+
+On docker desktop added the repo to access via HTTP.
