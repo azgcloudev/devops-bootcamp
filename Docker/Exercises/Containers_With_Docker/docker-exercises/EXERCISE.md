@@ -66,7 +66,7 @@ services:
     ports:
       - 3306:3306
     environment:
-      - MYSQL_ROOT_PASSWORD=Administrator123=Administrator123
+      - MYSQL_ROOT_PASSWORD=Administrator123
       - MYSQL_DATABASE=Test
       - MYSQL_USER=admin
       - MYSQL_PASSWORD=Administrator123
@@ -83,6 +83,23 @@ volumes:
   mysql-data:
 ```
 
+## Exercise 5
+
+
 ## Exercise 4
 
-### Dockerize java application
+### Dockerize the java application
+
+```
+FROM openjdk:22-ea-24-jdk-oraclelinux8
+
+RUN mkdir -p /home/app
+
+COPY ./build/libs/docker-exercises-project-1.0-SNAPSHOT.jar /home/app
+
+WORKDIR /home/app
+
+EXPOSE 8080
+
+CMD [ "java", "-jar", "docker-exercises-project-1.0-SNAPSHOT.jar" ]
+```

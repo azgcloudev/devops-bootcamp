@@ -1,16 +1,17 @@
 version: '3'
 services:
-  mysql:
+  mysqldb:
     image: mysql
     ports:
       - 3306:3306
     environment:
-      - MYSQL_ROOT_PASSWORD=Administrator123=Administrator123
+      - MYSQL_ROOT_PASSWORD=Administrator123
       - MYSQL_DATABASE=Test
       - MYSQL_USER=admin
       - MYSQL_PASSWORD=Administrator123
     volumes:
       - mysql-data:/var/lib/mysql
+    container_name: mysql
 
   phpmyadmin:
     image: phpmyadmin:5.2-apache
@@ -18,5 +19,18 @@ services:
      - 8181:80
     environment:
       - PMA_ARBITRARY=1
+
+  java-app:
+    image: app:1.2
+    ports:
+      - 8080:8080
+    environment:
+      - DB_NAME=${DB_NAME}
+      - DB_Server=${DB_Server}
+      - DB_PWD=${DB_PWD}
+      - DB_USER=${DB_USER}
+    depends_on:
+      - mysqldb
+
 volumes:
   mysql-data:
