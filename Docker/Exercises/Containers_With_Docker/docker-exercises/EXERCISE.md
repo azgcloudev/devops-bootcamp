@@ -87,7 +87,7 @@ volumes:
 
 ### Dockerize the java application
 
-```
+```Docker
 FROM openjdk:22-ea-24-jdk-oraclelinux8
 
 RUN mkdir -p /home/app
@@ -112,3 +112,106 @@ Enabled the following:
   - Activated *Docker Bearer Token Realm*
 
 On docker desktop added the repo to access via HTTP.
+
+### Build the image locally and push to this repository
+Build the image and tag the image to upload it to the repository.
+
+```bash
+docker build -t app:1.0 .
+
+docker tag app:1.0 nexusserver:8083/app:1.0
+
+docker login nexusserver:8083
+
+docker push nexusserver:8083/app:1.0
+```
+
+## Exercise 6
+
+###
+
+```yaml
+version: '3'
+services:
+  mysqldb:
+    image: mysql
+    ports:
+      - 3306:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MY_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+    volumes:
+      - mysql-data:/var/lib/mysql
+    container_name: mysql
+
+  phpmyadmin:
+    image: phpmyadmin:5.2-apache
+    ports:
+     - 8181:80
+    environment:
+      - PMA_ARBITRARY=1
+
+  java-app:
+    image: app:1.2
+    ports:
+      - 8080:8080
+    environment:
+      - DB_NAME=${DB_NAME}
+      - DB_SERVER=${DB_SERVER}
+      - DB_PWD=${DB_PWD}
+      - DB_USER=${DB_USER}
+    depends_on:
+      - mysqldb
+
+volumes:
+  mysql-data:
+```
+
+## Exercise 7
+
+### Set insecure docker repository on server, because Nexus uses http
+Added the Nexus repo to the deamon file in docker to access via http. 
+
+*cat /etc/docker/daemon.json*
+```json
+{
+	"insecure-registries": ["4.151.179.169:8083"]
+}
+```
+
+### Run docker login on the server to be allowed to pull the image
+```bash
+docker login 4.151.179.169:8083
+```
+
+### Your application index.html has a hardcoded localhost as a HOST to send requests to the backend. You need to fix that and set the server IP address instead, because the server is going to be the host when you deploy the application on a remote server. (Don't forget to rebuild and push the image and if needed adjust the docker-compose file)
+
+Updated the variable in the index.html file.
+
+### Copy docker-compose.yaml to the server
+```bash
+scp -i /Users/aldairzamora/Documents/aldairdevops.pem -r docker-compose.yaml azureuser@4.151.146.65:/home/azureuser/application/
+```
+
+### Set the needed environment variables for all containers in docker-compose
+```bash
+## MySQL variables
+export MYSQL_ROOT_PASSWORD=Administrator123
+export MYSQL_DATABASE=Test
+export MYSQL_USER=java
+export MYSQL_PASSWORD=Administrator123
+
+## Java application variables
+export DB_NAME=Test
+export DB_SERVER=mysqldb
+export DB_PWD=Administrator123
+export DB_USER=java
+```
+
+### Run docker-compose to start all 3 containers
+```bash
+docker compose -f docker-compose.yaml up
+```
+
