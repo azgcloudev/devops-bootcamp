@@ -1,11 +1,11 @@
 FROM openjdk:22-ea-24-jdk-oraclelinux8
 
-RUN mkdir -p /home/app
+EXPOSE 8080
 
-COPY ./build/libs/docker-exercises-project-1.0-SNAPSHOT.jar /home/app
+RUN mkdir -p /home/app
 
 WORKDIR /home/app
 
-EXPOSE 8080
+COPY ./build/libs/docker-exercises-project-1.0-SNAPSHOT.jar ./
 
 CMD [ "java", "-jar", "docker-exercises-project-1.0-SNAPSHOT.jar" ]

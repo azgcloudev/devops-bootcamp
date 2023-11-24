@@ -212,6 +212,6 @@ export DB_USER=java
 
 ### Run docker-compose to start all 3 containers
 ```bash
-docker compose -f docker-compose.yaml up
+docker compose -f docker-compose.yaml up -d
 ```
 
